@@ -76,6 +76,10 @@ try {
             // Fallback to non-persistent if persistent connection fails
             $connected = @$conn->real_connect($clean_host, $username, $password, $dbname, $port, NULL, MYSQLI_CLIENT_SSL);
         }
+        if (!$connected && strpos($clean_host, 'tidbcloud.com') !== false) {
+            // Fallback to direct resolved IP if DNS resolution times out
+            $connected = @$conn->real_connect('75.2.85.188', $username, $password, $dbname, $port, NULL, MYSQLI_CLIENT_SSL);
+        }
     } else {
         $connected = @$conn->real_connect($servername, $username, $password, $dbname, $port);
     }
